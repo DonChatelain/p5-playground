@@ -5,7 +5,7 @@ const sketch = (p) => {
   let col = 0;
   let inc = 0.1;
   let start = 0
-  let scl = 30;
+  let scl = 20;
   let cols
   let rows
   let zoff = 0;
@@ -15,7 +15,7 @@ const sketch = (p) => {
   
   // initializes on startup
   p.setup = () => {
-    p.createCanvas(window.innerWidth, window.innerHeight)
+    p.createCanvas(4000, 4000)
     
     cols = Math.floor(p.width/scl);
     rows = Math.floor(p.height/scl);
@@ -65,6 +65,22 @@ const sketch = (p) => {
       col++;
     } else if (col > 255) {
       col = 0;
+    }
+  }
+
+  p.keyPressed = () => {
+    if (p.key === 'Enter') {
+      const canvas = document.getElementsByTagName('canvas')[0]
+      canvas.toBlob(blob => {
+        fetch('http://localhost:3000/upload', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'image/png'
+          },
+          body: blob
+        })
+      })
     }
   }
 }
